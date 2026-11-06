@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+  labels:
+    inframind.cloud/type: platform
+spec:
+  project: platform
+  source:
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    chart: external-dns
+    targetRevision: 1.23.0
+    helm:
+      releaseName: external-dns
+      valuesObject:
+        provider:
+          name: cloudflare
+        sources:
+          - ingress
+          - traefik-proxy
+        policy: sync
+        registry: txt
+        txtOwnerId: local-k3s
+        domainFilters:
+          - inframind.cloud
+        extraArgs:
+          - --zone-id-filter=a60663372fb7207c80a5006da5b5f58f
+          - --cloudflare-proxied
+        env:
+          - name: CF_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: cloudflare-api-token
+                key: apiToken
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

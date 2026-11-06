@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example
+  annotations:
+    external-dns.kubernetes.io/target: "104.225.216.99"
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - example.inframind.cloud
+  rules:
+    - host: example.inframind.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example
+                port:
+                  number: 80

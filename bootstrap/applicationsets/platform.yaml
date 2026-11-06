@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: git@github.com:inframind-cloud/gitops.git
+        revision: main
+        directories:
+          - path: platform/*
+  template:
+    metadata:
+      name: "{{.path.basename}}"
+      labels:
+        inframind.cloud/type: platform
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: platform
+      source:
+        repoURL: git@github.com:inframind-cloud/gitops.git
+        targetRevision: main
+        path: "{{.path.path}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ if eq .path.basename "argocd" }}argocd{{ else }}kube-system{{ end }}'
+      ignoreDifferences:
+        - group: helm.cattle.io
+          kind: HelmChartConfig
+          jsonPointers:
+            - /spec/failurePolicy
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false

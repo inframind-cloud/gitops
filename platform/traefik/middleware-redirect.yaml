@@ -1,0 +1,10 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: infra-root-redirect
+  namespace: kube-system
+spec:
+  redirectRegex:
+    permanent: false
+    regex: ^https?://infra\.inframind\.cloud/?$
+    replacement: https://infra.inframind.cloud/dashboard/

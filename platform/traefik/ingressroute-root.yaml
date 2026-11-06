@@ -1,0 +1,17 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: infra-root
+  namespace: kube-system
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`infra.inframind.cloud`) && Path(`/`)
+      middlewares:
+        - name: infra-root-redirect
+      services:
+        - kind: TraefikService
+          name: api@internal
