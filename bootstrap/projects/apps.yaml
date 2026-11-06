@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Workloads. O namespace é o nome da pasta em apps/.
   sourceRepos:
-    - git@github.com:inframind-cloud/gitops.git
+    - https://github.com/inframind-cloud/gitops.git
   destinations:
     - server: https://kubernetes.default.svc
       namespace: "*"

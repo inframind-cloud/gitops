@@ -10,7 +10,7 @@ spec:
     preserveResourcesOnDeletion: true
   generators:
     - git:
-        repoURL: git@github.com:inframind-cloud/gitops.git
+        repoURL: https://github.com/inframind-cloud/gitops.git
         revision: main
         directories:
           - path: namespaces/*
@@ -22,7 +22,7 @@ spec:
     spec:
       project: platform
       source:
-        repoURL: git@github.com:inframind-cloud/gitops.git
+        repoURL: https://github.com/inframind-cloud/gitops.git
         targetRevision: main
         path: "{{.path.path}}"
       destination:

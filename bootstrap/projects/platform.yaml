@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Addons do cluster local-k3s
   sourceRepos:
-    - git@github.com:inframind-cloud/gitops.git
+    - https://github.com/inframind-cloud/gitops.git
     - https://kubernetes-sigs.github.io/external-dns/
   destinations:
     - server: https://kubernetes.default.svc

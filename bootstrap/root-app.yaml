@@ -6,7 +6,7 @@ metadata:
 spec:
   project: platform
   source:
-    repoURL: git@github.com:inframind-cloud/gitops.git
+    repoURL: https://github.com/inframind-cloud/gitops.git
     targetRevision: main
     path: bootstrap
   destination:

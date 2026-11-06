@@ -8,7 +8,7 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: git@github.com:inframind-cloud/gitops.git
+        repoURL: https://github.com/inframind-cloud/gitops.git
         revision: main
         directories:
           - path: apps/*/*
@@ -24,7 +24,7 @@ spec:
     spec:
       project: apps
       source:
-        repoURL: git@github.com:inframind-cloud/gitops.git
+        repoURL: https://github.com/inframind-cloud/gitops.git
         targetRevision: main
         path: "{{.path.path}}"
       destination:
