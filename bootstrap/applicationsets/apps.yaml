@@ -11,12 +11,12 @@ spec:
         repoURL: git@github.com:inframind-cloud/gitops.git
         revision: main
         directories:
-          - path: apps/*
-          - path: apps/_template
+          - path: apps/*/*
+          - path: apps/_template/*
             exclude: true
   template:
     metadata:
-      name: "{{.path.basename}}"
+      name: '{{index .path.segments 1}}-{{.path.basename}}'
       labels:
         inframind.cloud/type: app
       finalizers:
@@ -29,7 +29,7 @@ spec:
         path: "{{.path.path}}"
       destination:
         server: https://kubernetes.default.svc
-        namespace: "{{.path.basename}}"
+        namespace: '{{index .path.segments 1}}'
       syncPolicy:
         automated:
           prune: true

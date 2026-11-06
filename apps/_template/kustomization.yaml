@@ -1,4 +1,4 @@
-# Copia esta pasta para apps/<nome>. O ApplicationSet ignora apps/_template.
+# Copia esta pasta para apps/<namespace>/<app>. O ApplicationSet ignora apps/_template.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
