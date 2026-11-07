@@ -23,11 +23,7 @@ Ingress com `ingressClassName: traefik` e host `*.inframind.cloud` recebe DNS pe
 
 ## Segredos
 
-Não entram neste repositório. O Dopbase corre no cluster e a UI é `https://dopbase.inframind.cloud`. Os Secrets que o Traefik, o external-dns, o cert-manager e o LiveKit já usam continuam no cluster. A masterkey do ZITADEL está no Secret `zitadel-masterkey` e a password inicial do admin no Secret `zitadel-admin-config`, ambos no namespace `zitadel`.
-
-## ZITADEL
-
-Consola em `https://auth.inframind.cloud`. O primeiro utilizador é `renato`.
+Não entram neste repositório. O Dopbase corre no cluster e a UI é `https://dopbase.inframind.cloud`. Os Secrets que o Traefik, o external-dns, o cert-manager e o LiveKit já usam continuam no cluster.
 
 ## LiveKit
 

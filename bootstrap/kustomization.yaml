@@ -12,4 +12,3 @@ resources:
   - cert-manager-issuer.yaml
   - livekit.yaml
   - external-secrets.yaml
-  - zitadel.yaml
