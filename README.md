@@ -33,6 +33,7 @@ O único Secret criado à mão no cluster é o runner token:
 
 ```sh
 kubectl -n sidespace create secret generic dopbase-runner --from-literal=token=<runner token>
+kubectl -n sidespace label secret dopbase-runner external-secrets.io/type=webhook
 ```
 
 O ExternalSecret atualiza o Secret de hora a hora, mas um Secret alterado não reinicia os pods. Depois de mudar uma variável: `kubectl -n sidespace rollout restart deploy/sidespace-api`.
