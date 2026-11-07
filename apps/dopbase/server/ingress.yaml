@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dopbase
+  annotations:
+    external-dns.kubernetes.io/target: "104.225.216.99"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - dopbase.inframind.cloud
+  rules:
+    - host: dopbase.inframind.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dopbase
+                port:
+                  name: http

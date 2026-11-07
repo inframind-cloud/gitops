@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dopbase
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: dopbase
+  template:
+    metadata:
+      labels:
+        app: dopbase
+    spec:
+      initContainers:
+        - name: install
+          image: alpine:3.20
+          command: ["sh", "-c"]
+          args:
+            - |
+              set -eu
+              apk add --no-cache ca-certificates curl tar
+              curl -fsSL -o /tmp/dopbase.tar.gz \
+                https://github.com/dopbase/dopbase/releases/download/0.1.10/dopbase_0.1.10_linux_amd64.tar.gz
+              echo "b294f56057cb21f5ca22348944ac538ed4d6a751282b342c96761483a3114868  /tmp/dopbase.tar.gz" | sha256sum -c -
+              tar -xzf /tmp/dopbase.tar.gz -C /opt
+              chmod 755 /opt/dopbase
+          volumeMounts:
+            - name: bin
+              mountPath: /opt
+      containers:
+        - name: dopbase
+          image: alpine:3.20
+          command: ["/opt/dopbase"]
+          args:
+            - --data-dir
+            - /data
+            - server
+            - start
+            - --host
+            - 0.0.0.0
+            - --public-url
+            - https://dopbase.inframind.cloud
+          ports:
+            - name: http
+              containerPort: 8840
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 3
+            failureThreshold: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: bin
+              mountPath: /opt
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: bin
+          emptyDir: {}
+        - name: data
+          persistentVolumeClaim:
+            claimName: dopbase

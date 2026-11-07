@@ -23,16 +23,7 @@ Ingress com `ingressClassName: traefik` e host `*.inframind.cloud` recebe DNS pe
 
 ## Segredos
 
-Não entram neste repositório. O External Secrets lê o Doppler pelo `ClusterSecretStore` `doppler`. O único Secret criado à mão é `doppler-token` no namespace `external-secrets` (service token, chave `dopplerToken`).
-
-| Secret no cluster | Chave | Nome no Doppler |
-| --- | --- | --- |
-| `cloudflare-api-token` (`external-dns`) | `apiToken` | `CLOUDFLARE_API_TOKEN` |
-| `cloudflare-api-token` (`cert-manager`) | `api-token` | `CLOUDFLARE_API_TOKEN` |
-| `traefik-dashboard-auth` (`kube-system`) | `users` | `TRAEFIK_DASHBOARD_USERS` |
-| `livekit-keys` (`livekit`) | `keys.yaml` | `LIVEKIT_KEYS` |
-
-Uma app nova ganha um `ExternalSecret` em `apps/<namespace>/<nome>/` a apontar para o mesmo store.
+Não entram neste repositório. O Dopbase corre no cluster e a UI é `https://dopbase.inframind.cloud`. Os Secrets que o Traefik, o external-dns, o cert-manager e o LiveKit já usam continuam no cluster.
 
 ## LiveKit
 
