@@ -11,6 +11,7 @@ spec:
     - https://helm.livekit.io
     - https://charts.jetstack.io
     - https://charts.external-secrets.io
+    - https://charts.zitadel.com
   destinations:
     - server: https://kubernetes.default.svc
       namespace: "*"
