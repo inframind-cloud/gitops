@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sidespace-ops
+  annotations:
+    external-dns.kubernetes.io/target: "104.225.216.99"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: cloudflare-dns
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - ops.sidespace.chat
+      secretName: sidespace-ops-tls
+  rules:
+    - host: ops.sidespace.chat
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sidespace-ops
+                port:
+                  name: http
