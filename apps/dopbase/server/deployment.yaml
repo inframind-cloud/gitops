@@ -34,6 +34,9 @@ spec:
         - name: dopbase
           image: alpine:3.20
           command: ["/opt/dopbase"]
+          env:
+            - name: DOPBASE_PORT
+              value: "8840"
           args:
             - --data-dir
             - /data
