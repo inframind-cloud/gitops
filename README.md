@@ -23,4 +23,8 @@ Ingress com `ingressClassName: traefik` e host `*.inframind.cloud` recebe DNS pe
 
 ## Segredos
 
-Não entram neste repositório. O token da Cloudflare está no Secret `cloudflare-api-token` (`external-dns`). O htpasswd do dashboard está no Secret `traefik-dashboard-auth` (`kube-system`).
+Não entram neste repositório. O token da Cloudflare está no Secret `cloudflare-api-token` (`external-dns`). O htpasswd do dashboard está no Secret `traefik-dashboard-auth` (`kube-system`). A API key do LiveKit está no Secret `livekit-keys` (`livekit`).
+
+## LiveKit
+
+Sinalização em `wss://livekit.inframind.cloud`. O TURN é `turn.inframind.cloud` (DNS only, registo A criado à mão para o IP da VPS). As apps assinam o JWT com a API key do Secret; a key não vai para o browser.

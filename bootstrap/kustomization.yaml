@@ -8,3 +8,6 @@ resources:
   - applicationsets/namespaces.yaml
   - applicationsets/platform.yaml
   - applicationsets/apps.yaml
+  - cert-manager.yaml
+  - cert-manager-issuer.yaml
+  - livekit.yaml
