@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sidespace-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sidespace-web
+  template:
+    metadata:
+      labels:
+        app: sidespace-web
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: sidespace-web
+          image: ghcr.io/sidespace-chat/sidespace-web
+          env:
+            - name: VITE_API_BASE_URL
+              value: https://api.sidespace.chat/api/v1
+          ports:
+            - name: http
+              containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 128Mi

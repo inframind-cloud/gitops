@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sidespace-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sidespace-api
+  template:
+    metadata:
+      labels:
+        app: sidespace-api
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: sidespace-api
+          image: ghcr.io/sidespace-chat/sidespace-api
+          envFrom:
+            - secretRef:
+                name: sidespace-api-env
+          env:
+            - name: SIDESPACE_PORT
+              value: "8080"
+            - name: SIDESPACE_AUTO_MIGRATE
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 3
+            failureThreshold: 40
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            capabilities:
+              drop: ["ALL"]

@@ -25,6 +25,18 @@ Ingress com `ingressClassName: traefik` e host `*.inframind.cloud` ou `*.sidespa
 
 Namespace `sidespace`. A UI fica em `https://app.sidespace.chat` e a API em `https://api.sidespace.chat`. As variáveis estão no Dopbase, projeto `sidespace`, ambiente `production`.
 
+Deploy: um push em `master` (backend) ou `main` (web) gera uma imagem amd64 no GHCR. O CI faz commit da tag `sha-<commit>` em `apps/sidespace/{api,web}/kustomization.yaml`, e o Argo CD sincroniza. A API corre as migrações ao arrancar (`SIDESPACE_AUTO_MIGRATE=true`).
+
+O External Secrets lê o ambiente pelo SecretStore `dopbase` (provider webhook, `apps/sidespace/secrets`). Gera dois Secrets: `sidespace-api-env`, com todas as variáveis menos `GHCR_*`, e `ghcr-pull`, a partir de `GHCR_PULL_USER` e `GHCR_PULL_TOKEN`. O repositório gitops não aceita deploy keys. O CI autentica com o secret `GITOPS_TOKEN` (PAT com escrita neste repositório). As imagens no GHCR são privadas: o ExternalSecret `ghcr-pull` usa `GHCR_PULL_USER` e `GHCR_PULL_TOKEN` (`read:packages`).
+
+O único Secret criado à mão no cluster é o runner token:
+
+```sh
+kubectl -n sidespace create secret generic dopbase-runner --from-literal=token=<runner token>
+```
+
+O ExternalSecret atualiza o Secret de hora a hora, mas um Secret alterado não reinicia os pods. Depois de mudar uma variável: `kubectl -n sidespace rollout restart deploy/sidespace-api`.
+
 ## Segredos
 
 Não entram neste repositório. O Dopbase corre no cluster e a UI é `https://dopbase.inframind.cloud`. Os Secrets que o Traefik, o external-dns, o cert-manager e o LiveKit já usam continuam no cluster.
