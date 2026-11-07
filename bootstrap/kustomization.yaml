@@ -11,3 +11,5 @@ resources:
   - cert-manager.yaml
   - cert-manager-issuer.yaml
   - livekit.yaml
+  - external-secrets.yaml
+  - doppler.yaml

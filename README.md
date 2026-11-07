@@ -23,7 +23,16 @@ Ingress com `ingressClassName: traefik` e host `*.inframind.cloud` recebe DNS pe
 
 ## Segredos
 
-Não entram neste repositório. O token da Cloudflare está no Secret `cloudflare-api-token` (`external-dns`). O htpasswd do dashboard está no Secret `traefik-dashboard-auth` (`kube-system`). A API key do LiveKit está no Secret `livekit-keys` (`livekit`).
+Não entram neste repositório. O External Secrets lê o Doppler pelo `ClusterSecretStore` `doppler`. O único Secret criado à mão é `doppler-token` no namespace `external-secrets` (service token, chave `dopplerToken`).
+
+| Secret no cluster | Chave | Nome no Doppler |
+| --- | --- | --- |
+| `cloudflare-api-token` (`external-dns`) | `apiToken` | `CLOUDFLARE_API_TOKEN` |
+| `cloudflare-api-token` (`cert-manager`) | `api-token` | `CLOUDFLARE_API_TOKEN` |
+| `traefik-dashboard-auth` (`kube-system`) | `users` | `TRAEFIK_DASHBOARD_USERS` |
+| `livekit-keys` (`livekit`) | `keys.yaml` | `LIVEKIT_KEYS` |
+
+Uma app nova ganha um `ExternalSecret` em `apps/<namespace>/<nome>/` a apontar para o mesmo store.
 
 ## LiveKit
 
