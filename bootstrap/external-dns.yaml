@@ -24,8 +24,10 @@ spec:
         txtOwnerId: local-k3s
         domainFilters:
           - inframind.cloud
+          - sidespace.chat
         extraArgs:
           - --zone-id-filter=a60663372fb7207c80a5006da5b5f58f
+          - --zone-id-filter=3af568f1105a47b6eb47ed6310b5746a
           - --cloudflare-proxied
         env:
           - name: CF_API_TOKEN

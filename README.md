@@ -19,7 +19,11 @@ Cria `namespaces/<nome>/namespace.yaml` e faz push. O ApplicationSet `namespaces
 
 Copia `apps/_template` para `apps/<namespace>/<app>`. O `_template` está excluído do generator.
 
-Ingress com `ingressClassName: traefik` e host `*.inframind.cloud` recebe DNS pela Cloudflare (external-dns, proxy ligado). O alvo é o IP do Service do Traefik.
+Ingress com `ingressClassName: traefik` e host `*.inframind.cloud` ou `*.sidespace.chat` recebe DNS pela Cloudflare (external-dns, proxy ligado). O alvo é o IP do Service do Traefik.
+
+## SideSpace
+
+Namespace `sidespace`. A UI fica em `https://app.sidespace.chat` e a API em `https://api.sidespace.chat`. As variáveis estão no Dopbase, projeto `sidespace`, ambiente `production`.
 
 ## Segredos
 
