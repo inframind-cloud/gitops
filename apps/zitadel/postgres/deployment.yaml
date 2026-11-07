@@ -14,9 +14,21 @@ spec:
       labels:
         app: zitadel-postgres
     spec:
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
       containers:
         - name: postgres
           image: postgres:16
+          command:
+            - bash
+            - -ec
+            - |
+              if [ ! -s "$PGDATA/PG_VERSION" ]; then
+                initdb --username="$POSTGRES_USER" --pwfile=<(printf '%s\n' "$POSTGRES_PASSWORD") --auth-host=scram-sha-256 --auth-local=trust
+              fi
+              exec postgres
           env:
             - name: POSTGRES_USER
               value: zitadel
@@ -37,6 +49,8 @@ spec:
           readinessProbe:
             exec:
               command: ["pg_isready", "-U", "zitadel", "-d", "postgres"]
+            timeoutSeconds: 3
+            periodSeconds: 5
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
