@@ -19,3 +19,11 @@ spec:
             apiTokenSecretRef:
               name: cloudflare-api-token
               key: api-token
+      - selector:
+          dnsZones:
+            - sidespace.chat
+        dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-api-token
+              key: api-token

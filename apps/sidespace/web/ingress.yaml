@@ -5,11 +5,13 @@ metadata:
   annotations:
     external-dns.kubernetes.io/target: "104.225.216.99"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: cloudflare-dns
 spec:
   ingressClassName: traefik
   tls:
     - hosts:
         - app.sidespace.chat
+      secretName: sidespace-web-tls
   rules:
     - host: app.sidespace.chat
       http:
