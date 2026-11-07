@@ -14,6 +14,8 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-pull
+      securityContext:
+        fsGroup: 65532
       containers:
         - name: sidespace-api
           image: ghcr.io/sidespace-chat/sidespace-api
@@ -25,6 +27,15 @@ spec:
               value: "8080"
             - name: SIDESPACE_AUTO_MIGRATE
               value: "true"
+            - name: SIDESPACE_STORAGE_DRIVER
+              value: local
+            - name: SIDESPACE_STORAGE_LOCAL_DIR
+              value: /data/uploads
+            - name: SIDESPACE_STORAGE_PUBLIC_BASE_URL
+              value: https://api.sidespace.chat/uploads
+          volumeMounts:
+            - name: uploads
+              mountPath: /data/uploads
           ports:
             - name: http
               containerPort: 8080
@@ -55,3 +66,7 @@ spec:
             runAsGroup: 65532
             capabilities:
               drop: ["ALL"]
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: sidespace-api-uploads
