@@ -18,6 +18,9 @@ spec:
       valuesObject:
         terminationGracePeriodSeconds: 600
         podHostNetwork: true
+        # hostNetwork + hostPorts: o pod novo só sobe depois que o antigo libera as portas.
+        deploymentStrategy:
+          type: Recreate
         loadBalancer:
           type: disable
         turnLoadbalancer:
