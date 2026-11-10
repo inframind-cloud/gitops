@@ -33,6 +33,13 @@ spec:
               value: /data/uploads
             - name: SIDESPACE_STORAGE_PUBLIC_BASE_URL
               value: https://api.sidespace.chat/uploads
+            - name: GOMEMLIMIT
+              value: 900MiB
+            # A origem só aceita 80/443 da Cloudflare (firewall do host).
+            - name: SIDESPACE_PROXY_HEADER
+              value: CF-Connecting-IP
+            - name: SIDESPACE_TRUSTED_PROXIES
+              value: 10.42.0.0/16
           volumeMounts:
             - name: uploads
               mountPath: /data/uploads
@@ -55,10 +62,10 @@ spec:
               port: http
           resources:
             requests:
-              cpu: 50m
-              memory: 64Mi
+              cpu: 500m
+              memory: 128Mi
             limits:
-              memory: 512Mi
+              memory: 1Gi
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true

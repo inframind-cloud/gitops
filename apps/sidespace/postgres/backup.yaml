@@ -1,0 +1,88 @@
+# Dump diário. Cópia local de 7 dias no PVC e envio pro R2 (sidespace-backups,
+# expira em 14 dias) quando BACKUP_R2_ACCESS_KEY_ID existir no Dopbase.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-backups
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+spec:
+  schedule: "30 6 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app: postgres-backup
+        spec:
+          restartPolicy: OnFailure
+          initContainers:
+            - name: dump
+              image: postgres:18-alpine
+              command: ["sh", "-c"]
+              args:
+                - |
+                  set -eu
+                  f=/backups/sidespace-$(date -u +%Y%m%dT%H%M%SZ).dump
+                  pg_dump -h postgres -U sidespace -d sidespace -Fc -f "$f.tmp"
+                  mv "$f.tmp" "$f"
+                  find /backups -name '*.dump' -mtime +7 -delete
+                  ls -la /backups
+              env:
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-env
+                      key: POSTGRES_PASSWORD
+              volumeMounts:
+                - name: backups
+                  mountPath: /backups
+          containers:
+            - name: upload
+              image: amazon/aws-cli:2.27.0
+              command: ["sh", "-c"]
+              args:
+                - |
+                  set -eu
+                  if [ -z "${AWS_ACCESS_KEY_ID:-}" ]; then echo "sem BACKUP_R2_*, só cópia local"; exit 0; fi
+                  f=$(ls -1t /backups/*.dump | head -1)
+                  aws s3 cp "$f" "s3://sidespace-backups/postgres/$(basename "$f")" \
+                    --endpoint-url https://6a4b8e5b2ac1dcea60835a6c12208dac.r2.cloudflarestorage.com
+              env:
+                - name: AWS_REGION
+                  value: auto
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-env
+                      key: BACKUP_R2_ACCESS_KEY_ID
+                      optional: true
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-env
+                      key: BACKUP_R2_SECRET_ACCESS_KEY
+                      optional: true
+              volumeMounts:
+                - name: backups
+                  mountPath: /backups
+                  readOnly: true
+          volumes:
+            - name: backups
+              persistentVolumeClaim:
+                claimName: postgres-backups

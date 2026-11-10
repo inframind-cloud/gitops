@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: postgres
+          image: postgres:18-alpine
+          args:
+            - -c
+            - shared_buffers=4GB
+            - -c
+            - effective_cache_size=12GB
+            - -c
+            - work_mem=16MB
+            - -c
+            - maintenance_work_mem=512MB
+            - -c
+            - max_connections=100
+            - -c
+            - wal_compression=on
+            - -c
+            - max_wal_size=2GB
+            - -c
+            - checkpoint_completion_target=0.9
+          env:
+            - name: POSTGRES_USER
+              value: sidespace
+            - name: POSTGRES_DB
+              value: sidespace
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-env
+                  key: POSTGRES_PASSWORD
+          ports:
+            - name: postgres
+              containerPort: 5432
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "sidespace", "-d", "sidespace"]
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: postgres
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "2"
+              memory: 8Gi
+            limits:
+              memory: 12Gi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
+            - name: shm
+              mountPath: /dev/shm
+      volumes:
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Gi
