@@ -14,12 +14,15 @@ spec:
         app: postgres
     spec:
       terminationGracePeriodSeconds: 60
-      # Já sobe como postgres (uid 70): como root, o entrypoint trava no gosu neste kernel.
+      # O perfil cri-containerd.apparmor.d deste host nega SIGURG entre processos do
+      # container, e o Postgres usa esse sinal nos latches: sem Unconfined ele trava.
       securityContext:
         runAsNonRoot: true
         runAsUser: 70
         runAsGroup: 70
         fsGroup: 70
+        appArmorProfile:
+          type: Unconfined
       containers:
         - name: postgres
           image: postgres:18-alpine
