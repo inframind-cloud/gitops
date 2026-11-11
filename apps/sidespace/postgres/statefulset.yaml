@@ -43,6 +43,9 @@ spec:
             - max_wal_size=2GB
             - -c
             - checkpoint_completion_target=0.9
+            # fsync do disco da VPS custa ~7 ms por commit. Em queda do host perde até ~1 s de escrita.
+            - -c
+            - synchronous_commit=off
           env:
             - name: POSTGRES_USER
               value: sidespace
