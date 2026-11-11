@@ -1,0 +1,18 @@
+port: 7880
+log_level: info
+key_file: keys.yaml
+prometheus:
+  port: 6789
+rtc:
+  tcp_port: 7881
+  udp_port: 7882
+  # Sem range, o LiveKit usa só o mux UDP na 7882 (a única porta UDP de mídia aberta no firewall).
+  port_range_start: 0
+  port_range_end: 0
+  use_external_ip: true
+  node_ip: 104.225.216.99
+turn:
+  enabled: true
+  domain: turn.inframind.cloud
+  tls_port: 5349
+  udp_port: 443

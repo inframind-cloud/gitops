@@ -10,5 +10,4 @@ resources:
   - applicationsets/apps.yaml
   - cert-manager.yaml
   - cert-manager-issuer.yaml
-  - livekit.yaml
   - external-secrets.yaml
