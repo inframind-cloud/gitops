@@ -44,4 +44,4 @@ Não entram neste repositório. O Dopbase corre no cluster e a UI é `https://do
 
 ## LiveKit
 
-Sinalização em `wss://livekit.inframind.cloud`. O TURN é `turn.inframind.cloud` (DNS only, registo A criado à mão para o IP da VPS). As apps assinam o JWT com a API key do Secret; a key não vai para o browser.
+Sinalização em `wss://livekit.inframind.cloud`. O servidor roda na VM Oracle `157.151.19.124`, fora deste cluster. O TURN é `turn.inframind.cloud` (DNS only, registo A manual para esse IP). O Deployment neste repo fica com 0 réplicas. As apps assinam o JWT com a API key do Secret; a key não vai para o browser.

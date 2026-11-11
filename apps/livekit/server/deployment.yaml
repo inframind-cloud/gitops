@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: livekit-server
     app.kubernetes.io/instance: livekit-server
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: livekit-server
