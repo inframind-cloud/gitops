@@ -8,7 +8,6 @@ spec:
   sourceRepos:
     - https://github.com/inframind-cloud/gitops.git
     - https://kubernetes-sigs.github.io/external-dns/
-    - https://helm.livekit.io
     - https://charts.jetstack.io
     - https://charts.external-secrets.io
   destinations:
