@@ -6,4 +6,4 @@ resources:
 - ingress.yaml
 images:
 - name: ghcr.io/sidespace-chat/sidespace-web
-  newTag: sha-82f90550aa441df09363dde6d812f961656bbed4
+  newTag: sha-332ae6fc92ad5323314f39160a054e97b269ceda
