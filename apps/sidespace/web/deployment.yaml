@@ -20,6 +20,8 @@ spec:
           env:
             - name: VITE_API_BASE_URL
               value: https://api.sidespace.chat/api/v1
+            - name: VITE_TURNSTILE_SITE_KEY
+              value: 0x4AAAAAAF-N9r_ZINTNKO1N
           ports:
             - name: http
               containerPort: 3000
