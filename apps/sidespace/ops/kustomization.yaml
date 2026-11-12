@@ -6,4 +6,4 @@ resources:
 - ingress.yaml
 images:
 - name: ghcr.io/sidespace-chat/backoffice
-  newTag: sha-d8e0432bdbfa4414ff43dada803f17b520562be5
+  newTag: sha-41d576ef461f678947a98c976203f45fd741276b
